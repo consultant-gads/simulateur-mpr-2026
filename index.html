@@ -7,6 +7,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
     <script async src="https://www.googletagmanager.com/gtag/js?id=AW-16833840094"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -16,19 +18,35 @@
     </script>
 
     <style>
-        body { background-color: #edf7ff; font-family: 'Inter', sans-serif; }
+        /* Force Montserrat partout + Orange personnalisé */
+        body, h1, h2, h3, h4, p, div, span, button, input, label { 
+            font-family: 'Montserrat', sans-serif !important; 
+        }
+        
+        body { background-color: #edf7ff; }
+        
+        /* Couleurs */
+        .text-custom-orange { color: #ef7e00; }
+        .bg-custom-orange { background-color: #ef7e00; }
+        .hover-bg-custom-orange:hover { background-color: #d97200; }
+        .accent-custom-orange { accent-color: #ef7e00; }
+        .border-custom-orange { border-color: #ef7e00; }
+
         .step { display: none; }
         .step.active { display: flex; animation: fadeIn 0.5s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
         .card-choice {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             border: 2px solid #e2e8f0;
             cursor: pointer;
             background-color: white;
             position: relative;
         }
-        .card-choice:hover { border-color: #3b82f6; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(59, 130, 246, 0.08); }
+        /* Hover uniquement sur desktop pour éviter les sticky hover sur mobile */
+        @media (hover: hover) {
+            .card-choice:hover { border-color: #3b82f6; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(59, 130, 246, 0.08); }
+        }
         .card-choice.selected { border-color: #3b82f6; background-color: #f0f7ff; }
 
         .check-box {
@@ -39,17 +57,27 @@
         .card-choice.selected .check-box { background-color: #3b82f6; border-color: #3b82f6; }
         .card-choice.selected .check-box::after { content: "\f00c"; font-family: "Font Awesome 6 Free"; font-weight: 900; color: white; font-size: 0.7rem; }
         
-        .custom-scrollbar::-webkit-scrollbar { width: 5px; }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         
-        .dpe-tag { width: 40px; height: 40px; border-radius: 8px; font-weight: 900; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+        .dpe-tag { width: 100%; height: 40px; border-radius: 8px; font-weight: 900; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+
+        /* HACK ANTI-SCROLLBAR */
+        html, body {
+            scrollbar-width: none; 
+            -ms-overflow-style: none; 
+        }
+        ::-webkit-scrollbar {
+            width: 0px;
+            background: transparent; 
+        }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4 md:p-8">
+<body class="min-h-screen flex items-center justify-center p-2 md:p-8">
 
-    <div class="w-full max-w-6xl bg-white rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col md:flex-row min-h-[800px]">
+    <div class="w-full max-w-6xl bg-white rounded-2xl md:rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col md:flex-row min-h-[600px] md:min-h-[800px]">
         
         <div class="w-full md:w-72 bg-slate-50 p-10 border-r border-slate-100 hidden md:block text-sm">
             <h3 class="text-slate-900 font-bold mb-10 text-xl">Votre parcours</h3>
@@ -61,258 +89,260 @@
         </div>
 
         <div class="flex-1 flex flex-col">
-            <div class="h-1.5 w-full bg-slate-100">
+            <div class="h-1 md:h-1.5 w-full bg-slate-100">
                 <div id="progressBar" class="h-full bg-blue-600 transition-all duration-500" style="width: 10%"></div>
             </div>
 
-            <div class="p-8 md:p-12 flex-1 flex flex-col justify-center">
+            <div class="p-4 md:p-12 flex-1 flex flex-col justify-center">
                 <div id="questions-container" class="w-full">
                     
                     <div class="step active flex-col" id="step1">
-                        <h2 class="text-3xl font-black text-slate-800 text-center mb-12">Je veux :</h2>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <button onclick="setMode('simul')" class="card-choice p-8 rounded-3xl flex flex-col items-center gap-6 text-center">
-                                <div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 text-3xl"><i class="fa-solid fa-calculator"></i></div>
-                                <span class="text-xl font-bold">Calculer mes aides et primes</span>
+                        <h2 class="text-2xl md:text-3xl font-black text-slate-800 text-center mb-6 md:mb-12">Je veux :</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-6">
+                            <button onclick="setMode('simul')" class="card-choice p-4 md:p-8 rounded-2xl md:rounded-3xl flex md:flex-col flex-row items-center gap-4 md:gap-6 text-left md:text-center">
+                                <div class="w-12 h-12 md:w-16 md:h-16 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 text-xl md:text-3xl flex-shrink-0"><i class="fa-solid fa-calculator"></i></div>
+                                <span class="text-sm md:text-xl font-bold">Calculer mes aides et primes</span>
                             </button>
-                            <button onclick="setMode('etude')" class="card-choice p-8 rounded-3xl flex flex-col items-center gap-6 text-center">
-                                <div class="w-16 h-16 bg-green-50 rounded-2xl flex items-center justify-center text-green-600 text-3xl"><i class="fa-solid fa-clipboard-check"></i></div>
-                                <span class="text-xl font-bold">Étude thermique</span>
+                            <button onclick="setMode('etude')" class="card-choice p-4 md:p-8 rounded-2xl md:rounded-3xl flex md:flex-col flex-row items-center gap-4 md:gap-6 text-left md:text-center">
+                                <div class="w-12 h-12 md:w-16 md:h-16 bg-green-50 rounded-2xl flex items-center justify-center text-green-600 text-xl md:text-3xl flex-shrink-0"><i class="fa-solid fa-clipboard-check"></i></div>
+                                <span class="text-sm md:text-xl font-bold">Étude thermique</span>
                             </button>
-                            <a href="https://www.odirenov.fr/" target="_blank" class="card-choice p-8 rounded-3xl flex flex-col items-center gap-6 text-center">
-                                <div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 text-3xl"><i class="fa-solid fa-magnifying-glass"></i></div>
-                                <span class="text-xl font-bold">Savoir quels travaux réaliser</span>
+                            <a href="https://www.odirenov.fr/" target="_blank" class="card-choice p-4 md:p-8 rounded-2xl md:rounded-3xl flex md:flex-col flex-row items-center gap-4 md:gap-6 text-left md:text-center">
+                                <div class="w-12 h-12 md:w-16 md:h-16 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 text-xl md:text-3xl flex-shrink-0"><i class="fa-solid fa-magnifying-glass"></i></div>
+                                <span class="text-sm md:text-xl font-bold">Savoir quels travaux réaliser</span>
                             </a>
                         </div>
                     </div>
 
                     <div class="step flex-col" id="step_etude_type">
-                        <h2 class="text-3xl font-black text-slate-800 text-center mb-12">Quel type d'étude ?</h2>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto w-full">
-                            <button onclick="saveEtude('Audit énergétique')" class="card-choice p-6 rounded-2xl font-bold text-center">Audit énergétique</button>
-                            <button onclick="saveEtude('DPE')" class="card-choice p-6 rounded-2xl font-bold text-center">DPE</button>
-                            <button onclick="saveEtude('DPE projeté')" class="card-choice p-6 rounded-2xl font-bold text-center">DPE projeté</button>
-                            <button onclick="saveEtude('Test étanchéité')" class="card-choice p-6 rounded-2xl font-bold text-center">Test d'étanchéité</button>
-                            <button onclick="saveEtude('Simulation thermique')" class="card-choice p-6 rounded-2xl font-bold text-center md:col-span-2">Simulation thermique dynamique</button>
+                        <h2 class="text-2xl md:text-3xl font-black text-slate-800 text-center mb-6 md:mb-12">Quel type d'étude ?</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 max-w-3xl mx-auto w-full">
+                            <button onclick="saveEtude('Audit énergétique')" class="card-choice p-4 md:p-6 rounded-2xl font-bold text-center text-sm md:text-base">Audit énergétique</button>
+                            <button onclick="saveEtude('DPE')" class="card-choice p-4 md:p-6 rounded-2xl font-bold text-center text-sm md:text-base">DPE</button>
+                            <button onclick="saveEtude('DPE projeté')" class="card-choice p-4 md:p-6 rounded-2xl font-bold text-center text-sm md:text-base">DPE projeté</button>
+                            <button onclick="saveEtude('Test étanchéité')" class="card-choice p-4 md:p-6 rounded-2xl font-bold text-center text-sm md:text-base">Test d'étanchéité</button>
+                            <button onclick="saveEtude('Simulation thermique')" class="card-choice p-4 md:p-6 rounded-2xl font-bold text-center md:col-span-2 text-sm md:text-base">Simulation thermique dynamique</button>
                         </div>
                     </div>
 
                     <div class="step flex-col" id="step2">
-                        <h2 class="text-3xl font-black text-slate-800 text-center mb-12">Votre projet concerne :</h2>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-2xl mx-auto">
-                            <button onclick="saveData('type_logement', 'maison')" class="card-choice p-8 rounded-[2rem] flex flex-col items-center gap-4">
-                                <img src="https://cdn-icons-png.flaticon.com/512/619/619153.png" class="w-24 mx-auto"><span class="text-lg font-bold">Une maison</span>
+                        <h2 class="text-2xl md:text-3xl font-black text-slate-800 text-center mb-6 md:mb-12">Votre projet concerne :</h2>
+                        <div class="grid grid-cols-2 gap-4 md:gap-8 max-w-2xl mx-auto w-full">
+                            <button onclick="saveData('type_logement', 'maison')" class="card-choice p-4 md:p-8 rounded-2xl md:rounded-[2rem] flex flex-col items-center gap-2 md:gap-4">
+                                <img src="https://cdn-icons-png.flaticon.com/512/619/619153.png" class="w-16 md:w-24 mx-auto">
+                                <span class="text-sm md:text-lg font-bold">Une maison</span>
                             </button>
-                            <button onclick="saveData('type_logement', 'appartement')" class="card-choice p-8 rounded-[2rem] flex flex-col items-center gap-4">
-                                <img src="https://cdn-icons-png.flaticon.com/512/1018/1018573.png" class="w-24 mx-auto"><span class="text-lg font-bold">Un appartement</span>
+                            <button onclick="saveData('type_logement', 'appartement')" class="card-choice p-4 md:p-8 rounded-2xl md:rounded-[2rem] flex flex-col items-center gap-2 md:gap-4">
+                                <img src="https://cdn-icons-png.flaticon.com/512/1018/1018573.png" class="w-16 md:w-24 mx-auto">
+                                <span class="text-sm md:text-lg font-bold">Un appartement</span>
                             </button>
                         </div>
                     </div>
 
                     <div class="step flex-col" id="step3">
-                        <h2 class="text-3xl font-black text-slate-800 text-center mb-6">La construction date de :</h2>
-                        <div class="bg-yellow-50 border border-yellow-100 text-yellow-700 p-4 rounded-2xl text-center mb-12 text-sm max-w-xl mx-auto font-medium">Cela permet de nous assurer de votre éligibilité.</div>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <button onclick="saveData('anciennete', '-2ans')" class="card-choice p-8 rounded-2xl font-bold text-center">Moins de 2 ans</button>
-                            <button onclick="saveData('anciennete', '2-15ans')" class="card-choice p-8 rounded-2xl font-bold text-center">Entre 2 ans et 15 ans</button>
-                            <button onclick="saveData('anciennete', '+15ans')" class="card-choice p-8 rounded-2xl font-bold text-center">Plus de 15 ans</button>
+                        <h2 class="text-2xl md:text-3xl font-black text-slate-800 text-center mb-4 md:mb-6">La construction date de :</h2>
+                        <div class="bg-yellow-50 border border-yellow-100 text-yellow-700 p-3 md:p-4 rounded-2xl text-center mb-6 md:mb-12 text-xs md:text-sm max-w-xl mx-auto font-medium">Cela permet de nous assurer de votre éligibilité.</div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-6">
+                            <button onclick="saveData('anciennete', '-2ans')" class="card-choice p-4 md:p-8 rounded-2xl font-bold text-center text-sm md:text-base">Moins de 2 ans</button>
+                            <button onclick="saveData('anciennete', '2-15ans')" class="card-choice p-4 md:p-8 rounded-2xl font-bold text-center text-sm md:text-base">Entre 2 ans et 15 ans</button>
+                            <button onclick="saveData('anciennete', '+15ans')" class="card-choice p-4 md:p-8 rounded-2xl font-bold text-center text-sm md:text-base">Plus de 15 ans</button>
                         </div>
                     </div>
 
                     <div class="step flex-col" id="step4">
-                        <h2 class="text-3xl font-black text-slate-800 text-center mb-12">Surface habitable ?</h2>
+                        <h2 class="text-2xl md:text-3xl font-black text-slate-800 text-center mb-6 md:mb-12">Surface habitable ?</h2>
                         <div class="max-w-md mx-auto w-full">
-                            <label class="block text-slate-700 font-bold mb-4 ml-1">Surface en m²</label>
-                            <input type="number" id="surfaceInput" placeholder="179" class="w-full p-6 bg-white border border-slate-200 rounded-xl text-2xl font-bold outline-none focus:border-blue-500 transition-all">
-                            <button onclick="validerSurface()" class="w-full mt-8 bg-blue-600 text-white py-6 rounded-2xl font-black text-xl shadow-lg hover:bg-blue-700 transition-all">Continuer</button>
+                            <label class="block text-slate-700 font-bold mb-2 md:mb-4 ml-1">Surface en m²</label>
+                            <input type="number" id="surfaceInput" placeholder="179" class="w-full p-4 md:p-6 bg-white border border-slate-200 rounded-xl text-xl md:text-2xl font-bold outline-none focus:border-blue-500 transition-all">
+                            <button onclick="validerSurface()" class="w-full mt-6 md:mt-8 bg-blue-600 text-white py-4 md:py-6 rounded-2xl font-black text-lg md:text-xl shadow-lg hover:bg-blue-700 transition-all">Continuer</button>
                         </div>
                     </div>
 
                     <div class="step flex-col" id="step5">
-                        <h2 class="text-3xl font-black text-slate-800 text-center mb-12">Chauffage principal ?</h2>
-                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                            <button onclick="handleHeating('fioul')" class="card-choice p-6 rounded-2xl flex flex-col items-center gap-3"><i class="fa-solid fa-droplet text-2xl text-slate-400"></i><span class="font-bold text-sm">Fioul</span></button>
-                            <button onclick="handleHeating('elec')" class="card-choice p-6 rounded-2xl flex flex-col items-center gap-3"><i class="fa-solid fa-bolt text-2xl text-yellow-500"></i><span class="font-bold text-sm">Électricité</span></button>
-                            <button onclick="handleHeating('gaz')" class="card-choice p-6 rounded-2xl flex flex-col items-center gap-3"><i class="fa-solid fa-fire text-2xl text-orange-500"></i><span class="font-bold text-sm">Gaz</span></button>
-                            <button onclick="handleHeating('bois')" class="card-choice p-6 rounded-2xl flex flex-col items-center gap-3"><i class="fa-solid fa-tree text-2xl text-green-700"></i><span class="font-bold text-sm">Bois</span></button>
-                            <button onclick="handleHeating('pac')" class="card-choice p-6 rounded-2xl flex flex-col items-center gap-3"><i class="fa-solid fa-fan text-2xl text-blue-400"></i><span class="font-bold text-sm">PAC</span></button>
-                            <button onclick="handleHeating('charbon')" class="card-choice p-6 rounded-2xl flex flex-col items-center gap-3"><i class="fa-solid fa-box text-2xl text-slate-800"></i><span class="font-bold text-sm">Charbon</span></button>
+                        <h2 class="text-2xl md:text-3xl font-black text-slate-800 text-center mb-6 md:mb-12">Chauffage principal ?</h2>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+                            <button onclick="handleHeating('fioul')" class="card-choice p-4 md:p-6 rounded-2xl flex flex-col items-center gap-2 md:gap-3"><i class="fa-solid fa-droplet text-xl md:text-2xl text-slate-400"></i><span class="font-bold text-xs md:text-sm">Fioul</span></button>
+                            <button onclick="handleHeating('elec')" class="card-choice p-4 md:p-6 rounded-2xl flex flex-col items-center gap-2 md:gap-3"><i class="fa-solid fa-bolt text-xl md:text-2xl text-yellow-500"></i><span class="font-bold text-xs md:text-sm">Électricité</span></button>
+                            <button onclick="handleHeating('gaz')" class="card-choice p-4 md:p-6 rounded-2xl flex flex-col items-center gap-2 md:gap-3"><i class="fa-solid fa-fire text-xl md:text-2xl text-orange-500"></i><span class="font-bold text-xs md:text-sm">Gaz</span></button>
+                            <button onclick="handleHeating('bois')" class="card-choice p-4 md:p-6 rounded-2xl flex flex-col items-center gap-2 md:gap-3"><i class="fa-solid fa-tree text-xl md:text-2xl text-green-700"></i><span class="font-bold text-xs md:text-sm">Bois</span></button>
+                            <button onclick="handleHeating('pac')" class="card-choice p-4 md:p-6 rounded-2xl flex flex-col items-center gap-2 md:gap-3"><i class="fa-solid fa-fan text-xl md:text-2xl text-blue-400"></i><span class="font-bold text-xs md:text-sm">PAC</span></button>
+                            <button onclick="handleHeating('charbon')" class="card-choice p-4 md:p-6 rounded-2xl flex flex-col items-center gap-2 md:gap-3"><i class="fa-solid fa-box text-xl md:text-2xl text-slate-800"></i><span class="font-bold text-xs md:text-sm">Charbon</span></button>
                         </div>
                     </div>
 
-                    <div class="step flex-col" id="step_fioul"><h2 class="text-2xl font-black text-center mb-6">Équipement au fioul ?</h2><div class="grid grid-cols-1 md:grid-cols-2 gap-4"><button onclick="saveData('detail_chauffage', 'Condensation')" class="card-choice p-6 rounded-2xl font-bold">Chaudière condensation</button><button onclick="saveData('detail_chauffage', 'Classique')" class="card-choice p-6 rounded-2xl font-bold">Chaudière classique</button><button onclick="saveData('detail_chauffage', 'Poele')" class="card-choice p-6 rounded-2xl font-bold">Poêle</button><button onclick="saveData('detail_chauffage', 'NSP')" class="card-choice p-6 rounded-2xl font-bold text-slate-400">Je ne sais pas</button></div></div>
-                    <div class="step flex-col" id="step_elec"><h2 class="text-2xl font-black text-center mb-8">Système électrique ?</h2><div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center"><button onclick="saveData('detail_chauffage', 'Chaudiere')" class="card-choice p-6 rounded-2xl font-bold text-xs">Chaudière électrique</button><button onclick="saveData('detail_chauffage', 'Planchers')" class="card-choice p-6 rounded-2xl font-bold text-xs">Plafonds/Planchers</button><button onclick="saveData('detail_chauffage', 'Radiateurs')" class="card-choice p-6 rounded-2xl font-bold text-xs">Radiateurs</button></div></div>
-                    <div class="step flex-col" id="step_gaz"><h2 class="text-2xl font-black text-center mb-6">Système au gaz ?</h2><div class="grid grid-cols-1 md:grid-cols-2 gap-4"><button onclick="saveData('detail_chauffage', 'Condensation')" class="card-choice p-6 rounded-2xl font-bold">Chaudière condensation</button><button onclick="saveData('detail_chauffage', 'Classique')" class="card-choice p-6 rounded-2xl font-bold">Chaudière classique</button><button onclick="saveData('detail_chauffage', 'Poele')" class="card-choice p-6 rounded-2xl font-bold">Poêle</button><button onclick="saveData('detail_chauffage', 'NSP')" class="card-choice p-6 rounded-2xl font-bold text-slate-400">Je ne sais pas</button></div></div>
+                    <div class="step flex-col" id="step_fioul"><h2 class="text-xl md:text-2xl font-black text-center mb-6">Équipement au fioul ?</h2><div class="grid grid-cols-1 md:grid-cols-2 gap-3"><button onclick="saveData('detail_chauffage', 'Condensation')" class="card-choice p-4 md:p-6 rounded-2xl font-bold text-sm">Chaudière condensation</button><button onclick="saveData('detail_chauffage', 'Classique')" class="card-choice p-4 md:p-6 rounded-2xl font-bold text-sm">Chaudière classique</button><button onclick="saveData('detail_chauffage', 'Poele')" class="card-choice p-4 md:p-6 rounded-2xl font-bold text-sm">Poêle</button><button onclick="saveData('detail_chauffage', 'NSP')" class="card-choice p-4 md:p-6 rounded-2xl font-bold text-slate-400 text-sm">Je ne sais pas</button></div></div>
+                    <div class="step flex-col" id="step_elec"><h2 class="text-xl md:text-2xl font-black text-center mb-6">Système électrique ?</h2><div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-center"><button onclick="saveData('detail_chauffage', 'Chaudiere')" class="card-choice p-4 md:p-6 rounded-2xl font-bold text-xs">Chaudière électrique</button><button onclick="saveData('detail_chauffage', 'Planchers')" class="card-choice p-4 md:p-6 rounded-2xl font-bold text-xs">Plafonds/Planchers</button><button onclick="saveData('detail_chauffage', 'Radiateurs')" class="card-choice p-4 md:p-6 rounded-2xl font-bold text-xs">Radiateurs</button></div></div>
+                    <div class="step flex-col" id="step_gaz"><h2 class="text-xl md:text-2xl font-black text-center mb-6">Système au gaz ?</h2><div class="grid grid-cols-1 md:grid-cols-2 gap-3"><button onclick="saveData('detail_chauffage', 'Condensation')" class="card-choice p-4 md:p-6 rounded-2xl font-bold text-sm">Chaudière condensation</button><button onclick="saveData('detail_chauffage', 'Classique')" class="card-choice p-4 md:p-6 rounded-2xl font-bold text-sm">Chaudière classique</button><button onclick="saveData('detail_chauffage', 'Poele')" class="card-choice p-4 md:p-6 rounded-2xl font-bold text-sm">Poêle</button><button onclick="saveData('detail_chauffage', 'NSP')" class="card-choice p-4 md:p-6 rounded-2xl font-bold text-slate-400 text-sm">Je ne sais pas</button></div></div>
 
                     <div class="step flex-col" id="step6">
-                        <h2 class="text-3xl font-black text-slate-800 text-center mb-4">Quels travaux envisagez-vous ?</h2>
-                        <div class="bg-yellow-50 border border-yellow-100 text-yellow-700 p-4 rounded-xl text-center mb-8 text-sm max-w-2xl mx-auto">Ce choix n’est pas définitif.</div>
-                        <div class="overflow-y-auto pr-4 max-h-[480px] space-y-10 custom-scrollbar">
+                        <h2 class="text-2xl md:text-3xl font-black text-slate-800 text-center mb-4">Quels travaux envisagez-vous ?</h2>
+                        <div class="bg-yellow-50 border border-yellow-100 text-yellow-700 p-3 md:p-4 rounded-xl text-center mb-6 md:mb-8 text-xs md:text-sm max-w-2xl mx-auto">Ce choix n’est pas définitif.</div>
+                        <div class="overflow-y-auto pr-2 md:pr-4 max-h-[350px] md:max-h-[480px] space-y-6 md:space-y-10 custom-scrollbar">
                             
                             <div>
-                                <h3 class="text-lg font-black text-slate-800 mb-4 border-l-4 border-blue-600 pl-3 uppercase text-xs tracking-widest">Isolation</h3>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                    <div onclick="toggleWork(this, 'Isolation Combles')" class="card-choice p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700">Isolation des Combles</span><div class="check-box"></div></div>
-                                    <div onclick="toggleWork(this, 'Isolation Murs')" class="card-choice p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700">Isolation des Murs</span><div class="check-box"></div></div>
-                                    <div onclick="toggleWork(this, 'Isolation Sol')" class="card-choice p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700">Isolation du Sol</span><div class="check-box"></div></div>
-                                    <div onclick="toggleWork(this, 'Fenêtres')" class="card-choice p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700">Fenêtres / Porte-fenêtres</span><div class="check-box"></div></div>
-                                    <div onclick="toggleWork(this, 'Volets')" class="card-choice p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700">Volets roulants (élec/solaire)</span><div class="check-box"></div></div>
-                                    <div onclick="toggleWork(this, 'Toiture-Terrasse')" class="card-choice p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700">Isolation Toiture-Terrasse</span><div class="check-box"></div></div>
-                                    <div onclick="toggleWork(this, 'VMC')" class="card-choice p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700">VMC</span><div class="check-box"></div></div>
+                                <h3 class="text-base md:text-lg font-black text-slate-800 mb-3 md:mb-4 border-l-4 border-blue-600 pl-3 uppercase text-xs tracking-widest">Isolation</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
+                                    <div onclick="toggleWork(this, 'Isolation Combles')" class="card-choice p-3 md:p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700 text-xs md:text-base">Isolation des Combles</span><div class="check-box"></div></div>
+                                    <div onclick="toggleWork(this, 'Isolation Murs')" class="card-choice p-3 md:p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700 text-xs md:text-base">Isolation des Murs</span><div class="check-box"></div></div>
+                                    <div onclick="toggleWork(this, 'Isolation Sol')" class="card-choice p-3 md:p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700 text-xs md:text-base">Isolation du Sol</span><div class="check-box"></div></div>
+                                    <div onclick="toggleWork(this, 'Fenêtres')" class="card-choice p-3 md:p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700 text-xs md:text-base">Fenêtres / Porte-fenêtres</span><div class="check-box"></div></div>
+                                    <div onclick="toggleWork(this, 'Volets')" class="card-choice p-3 md:p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700 text-xs md:text-base">Volets roulants</span><div class="check-box"></div></div>
+                                    <div onclick="toggleWork(this, 'Toiture-Terrasse')" class="card-choice p-3 md:p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700 text-xs md:text-base">Isolation Toiture</span><div class="check-box"></div></div>
+                                    <div onclick="toggleWork(this, 'VMC')" class="card-choice p-3 md:p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700 text-xs md:text-base">VMC</span><div class="check-box"></div></div>
                                 </div>
                             </div>
 
                             <div>
-                                <h3 class="text-lg font-black text-slate-800 mb-4 border-l-4 border-blue-600 pl-3 uppercase text-xs tracking-widest">Pompe à Chaleur et Climatisation</h3>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                    <div onclick="toggleWork(this, 'PAC Air/Eau')" class="card-choice p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700">Pompe à Chaleur Air/Eau</span><div class="check-box"></div></div>
-                                    <div onclick="toggleWork(this, 'PAC Géothermique')" class="card-choice p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700">Pompe à Chaleur Géothermique</span><div class="check-box"></div></div>
-                                    <div onclick="toggleWork(this, 'Climatisation réversible')" class="card-choice p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700">Climatisation réversible</span><div class="check-box"></div></div>
-                                    <div onclick="toggleWork(this, 'PAC Hybride')" class="card-choice p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700">Pompe à Chaleur Hybride</span><div class="check-box"></div></div>
+                                <h3 class="text-base md:text-lg font-black text-slate-800 mb-3 md:mb-4 border-l-4 border-blue-600 pl-3 uppercase text-xs tracking-widest">Pompe à Chaleur</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
+                                    <div onclick="toggleWork(this, 'PAC Air/Eau')" class="card-choice p-3 md:p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700 text-xs md:text-base">PAC Air/Eau</span><div class="check-box"></div></div>
+                                    <div onclick="toggleWork(this, 'PAC Géothermique')" class="card-choice p-3 md:p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700 text-xs md:text-base">PAC Géothermique</span><div class="check-box"></div></div>
+                                    <div onclick="toggleWork(this, 'Climatisation réversible')" class="card-choice p-3 md:p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700 text-xs md:text-base">Clim réversible</span><div class="check-box"></div></div>
+                                    <div onclick="toggleWork(this, 'PAC Hybride')" class="card-choice p-3 md:p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700 text-xs md:text-base">PAC Hybride</span><div class="check-box"></div></div>
                                 </div>
                             </div>
 
                             <div>
-                                <h3 class="text-lg font-black text-slate-800 mb-4 border-l-4 border-blue-600 pl-3 uppercase text-xs tracking-widest">Chauffage Traditionnel</h3>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                    <div onclick="toggleWork(this, 'Chaudière fioul condensation')" class="card-choice p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700 text-sm">Chaudière fioul condensation</span><div class="check-box"></div></div>
-                                    <div onclick="toggleWork(this, 'Chaudière gaz condensation')" class="card-choice p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700 text-sm">Chaudière gaz condensation</span><div class="check-box"></div></div>
-                                    <div onclick="toggleWork(this, 'Radiateur électrique')" class="card-choice p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700 text-sm">Radiateur électrique</span><div class="check-box"></div></div>
+                                <h3 class="text-base md:text-lg font-black text-slate-800 mb-3 md:mb-4 border-l-4 border-blue-600 pl-3 uppercase text-xs tracking-widest">Chauffage Traditionnel</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
+                                    <div onclick="toggleWork(this, 'Chaudière fioul condensation')" class="card-choice p-3 md:p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700 text-xs md:text-base">Chaudière fioul</span><div class="check-box"></div></div>
+                                    <div onclick="toggleWork(this, 'Chaudière gaz condensation')" class="card-choice p-3 md:p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700 text-xs md:text-base">Chaudière gaz</span><div class="check-box"></div></div>
+                                    <div onclick="toggleWork(this, 'Radiateur électrique')" class="card-choice p-3 md:p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700 text-xs md:text-base">Radiateur élec</span><div class="check-box"></div></div>
                                 </div>
                             </div>
 
                             <div>
-                                <h3 class="text-lg font-black text-slate-800 mb-4 border-l-4 border-blue-600 pl-3 uppercase text-xs tracking-widest">Chauffage Bois</h3>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                    <div onclick="toggleWork(this, 'Chaudière bois')" class="card-choice p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700 text-sm">Chaudière bois</span><div class="check-box"></div></div>
-                                    <div onclick="toggleWork(this, 'Insert cheminée')" class="card-choice p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700 text-sm">Insert cheminée</span><div class="check-box"></div></div>
-                                    <div onclick="toggleWork(this, 'Poêle à bois')" class="card-choice p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700 text-sm">Poêle à bois</span><div class="check-box"></div></div>
+                                <h3 class="text-base md:text-lg font-black text-slate-800 mb-3 md:mb-4 border-l-4 border-blue-600 pl-3 uppercase text-xs tracking-widest">Chauffage Bois</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
+                                    <div onclick="toggleWork(this, 'Chaudière bois')" class="card-choice p-3 md:p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700 text-xs md:text-base">Chaudière bois</span><div class="check-box"></div></div>
+                                    <div onclick="toggleWork(this, 'Insert cheminée')" class="card-choice p-3 md:p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700 text-xs md:text-base">Insert cheminée</span><div class="check-box"></div></div>
+                                    <div onclick="toggleWork(this, 'Poêle à bois')" class="card-choice p-3 md:p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700 text-xs md:text-base">Poêle à bois</span><div class="check-box"></div></div>
                                 </div>
                             </div>
 
                             <div>
-                                <h3 class="text-lg font-black text-slate-800 mb-4 border-l-4 border-blue-600 pl-3 uppercase text-xs tracking-widest">Solaire</h3>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                    <div onclick="toggleWork(this, 'Panneaux Photovoltaïques')" class="card-choice p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700 text-sm">Panneaux Photovoltaïques</span><div class="check-box"></div></div>
-                                    <div onclick="toggleWork(this, 'Système Solaire Combiné')" class="card-choice p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700 text-sm">Système Solaire Combiné</span><div class="check-box"></div></div>
+                                <h3 class="text-base md:text-lg font-black text-slate-800 mb-3 md:mb-4 border-l-4 border-blue-600 pl-3 uppercase text-xs tracking-widest">Solaire</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
+                                    <div onclick="toggleWork(this, 'Panneaux Photovoltaïques')" class="card-choice p-3 md:p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700 text-xs md:text-base">Panneaux Photo</span><div class="check-box"></div></div>
+                                    <div onclick="toggleWork(this, 'Système Solaire Combiné')" class="card-choice p-3 md:p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700 text-xs md:text-base">Système Solaire</span><div class="check-box"></div></div>
                                 </div>
                             </div>
 
                             <div>
-                                <h3 class="text-lg font-black text-slate-800 mb-4 border-l-4 border-blue-600 pl-3 uppercase text-xs tracking-widest">Chauffe-Eau</h3>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                    <div onclick="toggleWork(this, 'Chauffe-eau Thermodynamique')" class="card-choice p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700 text-sm">Chauffe-eau Thermodynamique</span><div class="check-box"></div></div>
-                                    <div onclick="toggleWork(this, 'Chauffe-eau Solaire Individuel')" class="card-choice p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700 text-sm">Chauffe-eau Solaire</span><div class="check-box"></div></div>
-                                    <div onclick="toggleWork(this, 'Chauffe-eau électrique')" class="card-choice p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700 text-sm">Chauffe-eau électrique</span><div class="check-box"></div></div>
+                                <h3 class="text-base md:text-lg font-black text-slate-800 mb-3 md:mb-4 border-l-4 border-blue-600 pl-3 uppercase text-xs tracking-widest">Chauffe-Eau</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
+                                    <div onclick="toggleWork(this, 'Chauffe-eau Thermodynamique')" class="card-choice p-3 md:p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700 text-xs md:text-base">Chauffe-eau Thermo</span><div class="check-box"></div></div>
+                                    <div onclick="toggleWork(this, 'Chauffe-eau Solaire Individuel')" class="card-choice p-3 md:p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700 text-xs md:text-base">Chauffe-eau Solaire</span><div class="check-box"></div></div>
+                                    <div onclick="toggleWork(this, 'Chauffe-eau électrique')" class="card-choice p-3 md:p-4 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700 text-xs md:text-base">Chauffe-eau élec</span><div class="check-box"></div></div>
                                 </div>
                             </div>
 
                             <div>
-                                <h3 class="text-lg font-black text-slate-800 mb-4 border-l-4 border-blue-600 pl-3 uppercase text-xs tracking-widest">Rénovation globale</h3>
-                                <div onclick="toggleWork(this, 'Rénovation Globale')" class="card-choice p-5 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700">Combo Isolation / Chauffage / Ventilation</span><div class="check-box"></div></div>
+                                <h3 class="text-base md:text-lg font-black text-slate-800 mb-3 md:mb-4 border-l-4 border-blue-600 pl-3 uppercase text-xs tracking-widest">Rénovation globale</h3>
+                                <div onclick="toggleWork(this, 'Rénovation Globale')" class="card-choice p-4 md:p-5 rounded-xl flex items-center justify-between"><span class="font-bold text-slate-700 text-xs md:text-base">Combo Isolation / Chauffage / Ventilation</span><div class="check-box"></div></div>
                             </div>
 
-                            <button onclick="goTo('step7')" class="w-full p-5 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between hover:bg-slate-100 transition-all font-bold text-slate-500 italic">Je ne sais pas encore <i class="fa-solid fa-chevron-right"></i></button>
+                            <button onclick="goTo('step7')" class="w-full p-4 md:p-5 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between hover:bg-slate-100 transition-all font-bold text-slate-500 italic text-xs md:text-base">Je ne sais pas encore <i class="fa-solid fa-chevron-right"></i></button>
                         </div>
 
-                        <button id="btnProjet" onclick="goTo('step7')" class="w-full mt-8 bg-blue-600 text-white py-6 rounded-2xl font-black text-xl shadow-xl hover:bg-blue-700 transition-all hidden">Continuer (<span id="countProj">0</span>/5)</button>
+                        <button id="btnProjet" onclick="goTo('step7')" class="w-full mt-6 md:mt-8 bg-blue-600 text-white py-4 md:py-6 rounded-2xl font-black text-lg md:text-xl shadow-xl hover:bg-blue-700 transition-all hidden">Continuer (<span id="countProj">0</span>/5)</button>
                     </div>
 
                     <div class="step flex-col" id="step7">
-                        <h2 class="text-3xl font-black text-slate-800 text-center mb-12">Connaissez-vous votre DPE ?</h2>
-                        <div class="grid grid-cols-4 gap-4 max-w-lg mx-auto w-full">
-                            <button onclick="saveData('dpe', 'A')" class="card-choice p-4 rounded-xl flex flex-col items-center gap-2"><div class="dpe-tag bg-green-700">A</div></button>
-                            <button onclick="saveData('dpe', 'B')" class="card-choice p-4 rounded-xl flex flex-col items-center gap-2"><div class="dpe-tag bg-green-500">B</div></button>
-                            <button onclick="saveData('dpe', 'C')" class="card-choice p-4 rounded-xl flex flex-col items-center gap-2"><div class="dpe-tag bg-green-300">C</div></button>
-                            <button onclick="saveData('dpe', 'D')" class="card-choice p-4 rounded-xl flex flex-col items-center gap-2"><div class="dpe-tag bg-yellow-400">D</div></button>
-                            <button onclick="saveData('dpe', 'E')" class="card-choice p-4 rounded-xl flex flex-col items-center gap-2"><div class="dpe-tag bg-orange-400">E</div></button>
-                            <button onclick="saveData('dpe', 'F')" class="card-choice p-4 rounded-xl flex flex-col items-center gap-2"><div class="dpe-tag bg-orange-600">F</div></button>
-                            <button onclick="saveData('dpe', 'G')" class="card-choice p-4 rounded-xl flex flex-col items-center gap-2"><div class="dpe-tag bg-red-600">G</div></button>
-                            <button onclick="saveData('dpe', 'NSP')" class="card-choice p-4 rounded-xl flex flex-col items-center justify-center font-bold text-xs text-slate-500">Je ne sais pas</button>
+                        <h2 class="text-2xl md:text-3xl font-black text-slate-800 text-center mb-8 md:mb-12">Connaissez-vous votre DPE ?</h2>
+                        <div class="grid grid-cols-4 gap-2 md:gap-4 max-w-lg mx-auto w-full">
+                            <button onclick="saveData('dpe', 'A')" class="card-choice p-2 md:p-4 rounded-xl flex flex-col items-center gap-1 md:gap-2"><div class="dpe-tag bg-green-700">A</div></button>
+                            <button onclick="saveData('dpe', 'B')" class="card-choice p-2 md:p-4 rounded-xl flex flex-col items-center gap-1 md:gap-2"><div class="dpe-tag bg-green-500">B</div></button>
+                            <button onclick="saveData('dpe', 'C')" class="card-choice p-2 md:p-4 rounded-xl flex flex-col items-center gap-1 md:gap-2"><div class="dpe-tag bg-green-300">C</div></button>
+                            <button onclick="saveData('dpe', 'D')" class="card-choice p-2 md:p-4 rounded-xl flex flex-col items-center gap-1 md:gap-2"><div class="dpe-tag bg-yellow-400">D</div></button>
+                            <button onclick="saveData('dpe', 'E')" class="card-choice p-2 md:p-4 rounded-xl flex flex-col items-center gap-1 md:gap-2"><div class="dpe-tag bg-orange-400">E</div></button>
+                            <button onclick="saveData('dpe', 'F')" class="card-choice p-2 md:p-4 rounded-xl flex flex-col items-center gap-1 md:gap-2"><div class="dpe-tag bg-orange-600">F</div></button>
+                            <button onclick="saveData('dpe', 'G')" class="card-choice p-2 md:p-4 rounded-xl flex flex-col items-center gap-1 md:gap-2"><div class="dpe-tag bg-red-600">G</div></button>
+                            <button onclick="saveData('dpe', 'NSP')" class="card-choice p-2 md:p-4 rounded-xl flex flex-col items-center justify-center font-bold text-[10px] md:text-xs text-slate-500">NSP</button>
                         </div>
                     </div>
 
                     <div class="step flex-col" id="step8">
-                        <h2 class="text-3xl font-black text-slate-800 text-center mb-8">Informations foyer</h2>
-                        <div class="max-w-xs mx-auto w-full mb-10">
-                            <label class="block text-slate-700 font-bold mb-4 ml-1">Code Postal</label>
-                            <input type="text" id="cpInput" maxlength="5" placeholder="75001" class="w-full p-6 bg-white border border-slate-200 rounded-xl text-2xl font-bold outline-none focus:border-blue-500 transition-all text-center tracking-widest">
+                        <h2 class="text-2xl md:text-3xl font-black text-slate-800 text-center mb-6 md:mb-8">Localisation</h2>
+                        <div class="max-w-xs mx-auto w-full mb-8 md:mb-10">
+                            <label class="block text-slate-700 font-bold mb-2 md:mb-4 ml-1">Code Postal</label>
+                            <input type="text" id="cpInput" maxlength="5" placeholder="75001" class="w-full p-4 md:p-6 bg-white border border-slate-200 rounded-xl text-xl md:text-2xl font-bold outline-none focus:border-custom-orange transition-all text-center tracking-widest">
                             <p id="cpError" class="text-red-500 text-xs mt-2 hidden text-center">Code postal invalide</p>
                         </div>
                         <label class="text-slate-500 font-bold uppercase tracking-widest text-xs mb-3 block text-center">Nombre de personnes dans le foyer</label>
-                        <div class="grid grid-cols-3 md:grid-cols-6 gap-3 max-w-2xl mx-auto w-full">
-                            <button onclick="validateAndSaveMenage(1)" class="card-choice p-6 rounded-xl font-black text-xl text-center">1</button>
-                            <button onclick="validateAndSaveMenage(2)" class="card-choice p-6 rounded-xl font-black text-xl text-center">2</button>
-                            <button onclick="validateAndSaveMenage(3)" class="card-choice p-6 rounded-xl font-black text-xl text-center">3</button>
-                            <button onclick="validateAndSaveMenage(4)" class="card-choice p-6 rounded-xl font-black text-xl text-center">4</button>
-                            <button onclick="validateAndSaveMenage(5)" class="card-choice p-6 rounded-xl font-black text-xl text-center">5</button>
-                            <button onclick="validateAndSaveMenage(6)" class="card-choice p-6 rounded-xl font-black text-xl text-center">6+</button>
+                        <div class="grid grid-cols-3 md:grid-cols-6 gap-2 md:gap-3 max-w-2xl mx-auto w-full">
+                            <button onclick="validateAndSaveMenage(1)" class="card-choice p-4 md:p-6 rounded-xl font-black text-lg md:text-xl text-center">1</button>
+                            <button onclick="validateAndSaveMenage(2)" class="card-choice p-4 md:p-6 rounded-xl font-black text-lg md:text-xl text-center">2</button>
+                            <button onclick="validateAndSaveMenage(3)" class="card-choice p-4 md:p-6 rounded-xl font-black text-lg md:text-xl text-center">3</button>
+                            <button onclick="validateAndSaveMenage(4)" class="card-choice p-4 md:p-6 rounded-xl font-black text-lg md:text-xl text-center">4</button>
+                            <button onclick="validateAndSaveMenage(5)" class="card-choice p-4 md:p-6 rounded-xl font-black text-lg md:text-xl text-center">5</button>
+                            <button onclick="validateAndSaveMenage(6)" class="card-choice p-4 md:p-6 rounded-xl font-black text-lg md:text-xl text-center">6+</button>
                         </div>
                     </div>
 
                     <div class="step flex-col" id="step9">
-                        <h2 class="text-3xl font-black text-slate-800 text-center mb-4">Vos revenus fiscaux de référence</h2>
-                        <div class="bg-blue-50 text-blue-800 p-3 rounded-lg text-center mb-8 text-sm max-w-xl mx-auto font-medium">
-                            Basé sur <span id="summary-menage" class="font-bold">...</span> personnes en <span id="summary-region" class="font-bold">...</span>
+                        <h2 class="text-2xl md:text-3xl font-black text-slate-800 text-center mb-4">Vos revenus fiscaux de référence</h2>
+                        <div class="bg-blue-50 text-blue-800 p-3 md:p-4 rounded-lg text-center mb-6 md:mb-8 text-xs md:text-sm max-w-xl mx-auto font-medium">
+                            MaPrimeRénov' catégorise les aides en fonction de vos revenus. Ces informations restent strictement confidentielles et ne seront jamais partagées.
                         </div>
-                        <div id="income-buttons-container" class="grid grid-cols-1 gap-4 max-w-md mx-auto w-full">
+                        <div id="income-buttons-container" class="grid grid-cols-1 gap-3 md:gap-4 max-w-md mx-auto w-full">
                             </div>
                     </div>
 
                     <div class="step flex-col" id="step10">
-                        <h2 class="text-3xl font-black text-green-600 text-center mb-2">Bonne nouvelle !</h2>
-                        <h3 class="text-xl font-bold text-slate-800 text-center mb-8">Vous êtes éligible aux aides</h3>
+                        <h2 id="finalTitle" class="text-2xl md:text-3xl font-black text-custom-orange text-center mb-2">Bonne nouvelle !</h2>
+                        <h3 id="finalSubtitle" class="text-lg md:text-xl font-bold text-slate-800 text-center mb-6 md:mb-8">Vous êtes éligible aux aides</h3>
                         
-                        <div class="bg-white border border-slate-200 p-6 rounded-3xl max-w-lg mx-auto w-full shadow-lg">
-                            <p class="text-sm text-slate-500 mb-6 text-center">Laissez vos coordonnées pour recevoir le montant exact de vos aides. <br><span class="font-bold text-slate-700">Calcul gratuit et sans engagement.</span></p>
+                        <div class="bg-white border border-slate-200 p-4 md:p-6 rounded-3xl max-w-lg mx-auto w-full shadow-lg">
+                            <p class="text-xs md:text-sm text-slate-500 mb-4 md:mb-6 text-center">Laissez vos coordonnées pour recevoir le montant exact de vos aides. <br><span class="font-bold text-slate-700">Calcul gratuit et sans engagement.</span></p>
                             
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 mb-3 md:mb-4">
                                 <div>
                                     <label class="block text-xs font-bold text-slate-500 mb-1 ml-1 uppercase">Nom</label>
-                                    <input type="text" id="nomInput" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl font-bold outline-none focus:border-blue-500">
+                                    <input type="text" id="nomInput" class="w-full p-3 md:p-4 bg-slate-50 border border-slate-200 rounded-xl font-bold outline-none focus:border-custom-orange text-sm md:text-base">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-slate-500 mb-1 ml-1 uppercase">Prénom</label>
-                                    <input type="text" id="prenomInput" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl font-bold outline-none focus:border-blue-500">
+                                    <input type="text" id="prenomInput" class="w-full p-3 md:p-4 bg-slate-50 border border-slate-200 rounded-xl font-bold outline-none focus:border-custom-orange text-sm md:text-base">
                                 </div>
                             </div>
 
-                            <div class="mb-4">
+                            <div class="mb-3 md:mb-4">
                                 <label class="block text-xs font-bold text-slate-500 mb-1 ml-1 uppercase">Email</label>
-                                <input type="email" id="emailInput" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl font-bold outline-none focus:border-blue-500">
+                                <input type="email" id="emailInput" class="w-full p-3 md:p-4 bg-slate-50 border border-slate-200 rounded-xl font-bold outline-none focus:border-custom-orange text-sm md:text-base">
                             </div>
 
-                            <div class="mb-6">
+                            <div class="mb-4 md:mb-6">
                                 <label class="block text-xs font-bold text-slate-500 mb-1 ml-1 uppercase">Téléphone mobile</label>
-                                <input type="tel" id="telInput" maxlength="10" placeholder="06..." class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl font-bold outline-none focus:border-blue-500">
+                                <input type="tel" id="telInput" maxlength="10" placeholder="06..." class="w-full p-3 md:p-4 bg-slate-50 border border-slate-200 rounded-xl font-bold outline-none focus:border-custom-orange text-sm md:text-base">
                                 <p id="telError" class="text-red-500 text-xs mt-2 hidden">Numéro invalide (06 ou 07 requis)</p>
                             </div>
 
-                            <div class="flex items-start gap-3 mb-8">
-                                <input type="checkbox" id="rgpdCheck" class="w-5 h-5 mt-1 accent-blue-600">
-                                <label for="rgpdCheck" class="text-xs text-slate-400">J'accepte d'être recontacté(e) par un conseiller pour connaître mes droits et le montant de mes aides. (Obligatoire)</label>
+                            <div class="flex items-start gap-3 mb-6 md:mb-8">
+                                <input type="checkbox" id="rgpdCheck" class="w-5 h-5 mt-1 accent-custom-orange flex-shrink-0">
+                                <label for="rgpdCheck" id="rgpdLabel" class="text-xs text-slate-400">J'accepte d'être recontacté(e) par un conseiller pour connaître mes droits et le montant de mes aides. (Obligatoire)</label>
                             </div>
 
-                            <button onclick="validateAndSubmit()" class="w-full bg-green-600 text-white py-5 rounded-xl font-black text-xl shadow-xl hover:bg-green-700 transition-all transform hover:scale-[1.02]">
+                            <button id="finalCta" onclick="validateAndSubmit()" class="w-full bg-custom-orange text-white py-4 md:py-5 rounded-xl font-black text-lg md:text-xl shadow-xl hover-bg-custom-orange transition-all transform hover:scale-[1.02]">
                                 Connaître le montant de mes aides <i class="fa-solid fa-arrow-right ml-2"></i>
                             </button>
                         </div>
                     </div>
 
                     <div class="step flex-col items-center justify-center text-center py-10" id="step11">
-                        <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center text-green-600 text-5xl mb-6 shadow-sm">
+                        <div class="w-20 h-20 md:w-24 md:h-24 bg-orange-100 rounded-full flex items-center justify-center text-custom-orange text-4xl md:text-5xl mb-6 shadow-sm">
                             <i class="fa-solid fa-check"></i>
                         </div>
-                        <h2 class="text-4xl font-black text-slate-800 mb-4">Demande bien reçue !</h2>
-                        <p class="text-lg text-slate-600 max-w-lg mx-auto leading-relaxed">
+                        <h2 class="text-3xl md:text-4xl font-black text-slate-800 mb-4">Demande bien reçue !</h2>
+                        <p class="text-base md:text-lg text-slate-600 max-w-lg mx-auto leading-relaxed">
                             Merci <span id="finalName" class="font-bold text-slate-800"></span>, votre dossier est en cours d'analyse.<br>
-                            Un expert vous recontactera très rapidement pour vous communiquer le montant de vos aides.
+                            Un de nos experts vous rappellera très rapidement pour faire le point sur vos aides.
                         </p>
                     </div>
 
                 </div>
 
-                <div class="mt-12 flex items-center justify-between border-t pt-8">
+                <div class="mt-8 md:mt-12 flex items-center justify-between border-t pt-6 md:pt-8">
                     <button id="prevBtn" onclick="prevStep()" class="flex items-center gap-2 text-slate-400 font-bold uppercase text-[10px] tracking-widest hover:text-slate-600 transition-colors hidden"><i class="fa-solid fa-arrow-left"></i> Précédent</button>
                     <div class="text-[9px] text-slate-300 font-bold uppercase tracking-[0.2em] ml-auto">Certifié MaPrimeRénov' 2026</div>
                 </div>
@@ -332,7 +362,23 @@
             'HORS_IDF': { 1: [17009,21805,30549], 2: [24875,31889,44907], 3: [29917,38349,54071], 4: [34948,44802,63235], 5: [40002,51281,72400] }
         };
 
-        function setMode(mode) { currentMode = mode; if (mode === 'etude') goTo('step_etude_type'); else goTo('step2'); }
+        function setMode(mode) { 
+            currentMode = mode; 
+            if (mode === 'etude') {
+                document.getElementById('finalTitle').innerText = "Parfait !";
+                document.getElementById('finalSubtitle').innerText = "Entrez vos coordonnées pour obtenir votre devis.";
+                document.getElementById('finalCta').innerHTML = 'Obtenir mon devis gratuit <i class="fa-solid fa-arrow-right ml-2"></i>';
+                document.getElementById('rgpdLabel').innerText = "J'accepte d'être recontacté(e) pour recevoir mon devis. (Obligatoire)";
+                goTo('step_etude_type');
+            } else {
+                document.getElementById('finalTitle').innerText = "Bonne nouvelle !";
+                document.getElementById('finalSubtitle').innerText = "Vous êtes éligible aux aides";
+                document.getElementById('finalCta').innerHTML = 'Connaître le montant de mes aides <i class="fa-solid fa-arrow-right ml-2"></i>';
+                document.getElementById('rgpdLabel').innerText = "J'accepte d'être recontacté(e) par un conseiller pour connaître mes droits et le montant de mes aides. (Obligatoire)";
+                goTo('step2');
+            }
+        }
+        
         function saveEtude(type) { data.etude_type = type; goTo('step2'); }
 
         function validateAndSaveMenage(nb) {
@@ -345,8 +391,13 @@
             const dept = cp.substring(0, 2);
             data.region = ['75','77','78','91','92','93','94','95'].includes(dept) ? 'IDF' : 'HORS_IDF';
             data.nb_personnes = nb;
-            generateIncomeButtons();
-            goTo('step9');
+            
+            if (currentMode === 'etude') {
+                goTo('step10');
+            } else {
+                generateIncomeButtons();
+                goTo('step9');
+            }
         }
 
         function generateIncomeButtons() {
@@ -354,8 +405,6 @@
             const reg = data.region;
             const seuils = baremes[reg][nb];
             let supplement = data.nb_personnes > 5 ? (data.nb_personnes - 5) * 4412 : 0; 
-            document.getElementById('summary-menage').innerText = data.nb_personnes + " personnes";
-            document.getElementById('summary-region').innerText = reg === 'IDF' ? "Île-de-France" : "Province";
             const container = document.getElementById('income-buttons-container');
             container.innerHTML = ''; 
             const tranches = [
@@ -366,9 +415,9 @@
             ];
             tranches.forEach(t => {
                 const btn = document.createElement('button');
-                btn.className = "card-choice p-6 rounded-2xl font-bold text-lg text-left flex justify-between items-center group";
+                btn.className = "card-choice p-4 md:p-6 rounded-2xl font-bold text-sm md:text-lg text-left flex justify-between items-center group";
                 btn.onclick = () => { saveData('revenus', t.val); };
-                btn.innerHTML = `<span>${t.label}</span><i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-blue-500"></i>`;
+                btn.innerHTML = `<span>${t.label}</span><i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-custom-orange"></i>`;
                 container.appendChild(btn);
             });
         }
@@ -380,18 +429,32 @@
                 else nextStep(); 
             }
             else if (['step_fioul', 'step_elec', 'step_gaz'].includes(currentId)) { 
-                if (currentMode === 'etude') goTo('step7'); // SI ETUDE -> GO DPE
-                else goTo('step6'); // SI SIMUL -> GO PROJET
+                if (currentMode === 'etude') { 
+                    goTo('step8'); 
+                }
+                else goTo('step6'); 
             }
             else if (currentId === 'step9') { goTo('step10'); }
             else { nextStep(); }
         }
 
-        function validerSurface() { const val = document.getElementById('surfaceInput').value; if(val > 0) { data.surface = val; nextStep(); } }
-        function handleHeating(type) { data.chauffage = type; if(['fioul','elec','gaz'].includes(type)) goTo('step_' + type); 
-                                       else if (currentMode === 'etude') goTo('step7'); 
-                                       else goTo('step6'); 
-                                     }
+        function validerSurface() { 
+            const val = document.getElementById('surfaceInput').value; 
+            if(val > 0) { 
+                data.surface = val; 
+                if (currentMode === 'etude') goTo('step8');
+                else nextStep(); 
+            } 
+        }
+        
+        function handleHeating(type) { 
+            data.chauffage = type; 
+            if(['fioul','elec','gaz'].includes(type)) goTo('step_' + type); 
+            else if (currentMode === 'etude') {
+                goTo('step8'); 
+            }
+            else goTo('step6'); 
+        }
         
         function toggleWork(el, name) { const idx = data.travaux.indexOf(name); if (idx > -1) { data.travaux.splice(idx, 1); el.classList.remove('selected'); } else if (data.travaux.length < 5) { data.travaux.push(name); el.classList.add('selected'); } document.getElementById('countProj').innerText = data.travaux.length; document.getElementById('btnProjet').classList.toggle('hidden', data.travaux.length === 0); }
         function nextStep() { const num = parseInt(currentId.replace('step', '')); if(!isNaN(num)) goTo('step' + (num + 1)); }
@@ -425,7 +488,6 @@
             
             data.nom = nom; data.prenom = prenom; data.email = email; data.telephone = tel; data.currentMode = currentMode;
             
-            // 2. ENVOI AU GOOGLE SHEET + 3. ENVOI CONVERSION GOOGLE ADS
             fetch(APPS_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) }).then(() => {
                 // Tracking Google Ads
                 gtag('event', 'conversion', { 'send_to': 'AW-16833840094/hHKKCN3qo_cbEN6HgNs-' });
@@ -450,16 +512,17 @@
             const step10Index = allSteps.indexOf('step10');
             const isInfos = currentIndex >= step10Index;
 
-            document.getElementById('nav-logement').className = isLogement ? 'flex items-center gap-4 text-blue-600 font-bold' : 'flex items-center gap-4 text-slate-400 font-medium';
-            document.getElementById('nav-logement').querySelector('span').className = isLogement ? 'w-1.5 h-8 bg-blue-600 rounded-full' : 'w-1.5 h-8 bg-transparent';
+            document.getElementById('nav-logement').className = isLogement ? 'flex items-center gap-3 text-blue-600 font-bold' : 'flex items-center gap-3 text-slate-400 font-medium';
+            document.getElementById('nav-logement').querySelector('span').className = isLogement ? 'w-1 md:w-1.5 h-6 md:h-8 bg-blue-600 rounded-full' : 'w-1 md:w-1.5 h-6 md:h-8 bg-transparent';
 
-            document.getElementById('nav-projet').className = isProjet ? 'flex items-center gap-4 text-blue-600 font-bold' : 'flex items-center gap-4 text-slate-400 font-medium';
-            document.getElementById('nav-projet').querySelector('span').className = isProjet ? 'w-1.5 h-8 bg-blue-600 rounded-full' : 'w-1.5 h-8 bg-transparent';
+            document.getElementById('nav-projet').className = isProjet ? 'flex items-center gap-3 text-blue-600 font-bold' : 'flex items-center gap-3 text-slate-400 font-medium';
+            document.getElementById('nav-projet').querySelector('span').className = isProjet ? 'w-1 md:w-1.5 h-6 md:h-8 bg-blue-600 rounded-full' : 'w-1 md:w-1.5 h-6 md:h-8 bg-transparent';
             
-            document.getElementById('nav-infos').className = isInfos ? 'flex items-center gap-4 text-blue-600 font-bold' : 'flex items-center gap-4 text-slate-400 font-medium';
-            document.getElementById('nav-infos').querySelector('span').className = isInfos ? 'w-1.5 h-8 bg-blue-600 rounded-full' : 'w-1.5 h-8 bg-transparent';
+            document.getElementById('nav-infos').className = isInfos ? 'flex items-center gap-3 text-blue-600 font-bold' : 'flex items-center gap-3 text-slate-400 font-medium';
+            document.getElementById('nav-infos').querySelector('span').className = isInfos ? 'w-1 md:w-1.5 h-6 md:h-8 bg-blue-600 rounded-full' : 'w-1 md:w-1.5 h-6 md:h-8 bg-transparent';
         }
     </script>
 </body>
 </html>
+
 
