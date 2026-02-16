@@ -75,7 +75,7 @@
         }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-2 md:p-8">
+<body class="min-h-screen flex items-start md:items-center justify-center p-2 md:p-8">
 
     <div class="w-full max-w-6xl bg-white rounded-2xl md:rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col md:flex-row min-h-[600px] md:min-h-[800px]">
         
@@ -105,7 +105,7 @@
                             </button>
                             <button onclick="setMode('etude')" class="card-choice p-4 md:p-8 rounded-2xl md:rounded-3xl flex md:flex-col flex-row items-center gap-4 md:gap-6 text-left md:text-center">
                                 <div class="w-12 h-12 md:w-16 md:h-16 bg-green-50 rounded-2xl flex items-center justify-center text-green-600 text-xl md:text-3xl flex-shrink-0"><i class="fa-solid fa-clipboard-check"></i></div>
-                                <span class="text-sm md:text-xl font-bold">Étude thermique</span>
+                                <span class="text-sm md:text-xl font-bold">Réaliser une étude thermique</span>
                             </button>
                             <a href="https://www.odirenov.fr/" target="_blank" class="card-choice p-4 md:p-8 rounded-2xl md:rounded-3xl flex md:flex-col flex-row items-center gap-4 md:gap-6 text-left md:text-center">
                                 <div class="w-12 h-12 md:w-16 md:h-16 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 text-xl md:text-3xl flex-shrink-0"><i class="fa-solid fa-magnifying-glass"></i></div>
@@ -133,7 +133,7 @@
                                 <span class="text-sm md:text-lg font-bold">Une maison</span>
                             </button>
                             <button onclick="saveData('type_logement', 'appartement')" class="card-choice p-4 md:p-8 rounded-2xl md:rounded-[2rem] flex flex-col items-center gap-2 md:gap-4">
-                                <img src="https://cdn-icons-png.flaticon.com/512/1018/1018573.png" class="w-16 md:w-24 mx-auto">
+                                <img src="https://cdn-icons-png.flaticon.com/512/1824/1824414.png" class="w-16 md:w-24 mx-auto">
                                 <span class="text-sm md:text-lg font-bold">Un appartement</span>
                             </button>
                         </div>
@@ -266,7 +266,7 @@
                         <h2 class="text-2xl md:text-3xl font-black text-slate-800 text-center mb-6 md:mb-8">Localisation</h2>
                         <div class="max-w-xs mx-auto w-full mb-8 md:mb-10">
                             <label class="block text-slate-700 font-bold mb-2 md:mb-4 ml-1">Code Postal</label>
-                            <input type="text" id="cpInput" maxlength="5" placeholder="75001" class="w-full p-4 md:p-6 bg-white border border-slate-200 rounded-xl text-xl md:text-2xl font-bold outline-none focus:border-custom-orange transition-all text-center tracking-widest">
+                            <input type="text" id="cpInput" maxlength="5" placeholder="" class="w-full p-4 md:p-6 bg-white border border-slate-200 rounded-xl text-xl md:text-2xl font-bold outline-none focus:border-custom-orange transition-all text-center tracking-widest">
                             <p id="cpError" class="text-red-500 text-xs mt-2 hidden text-center">Code postal invalide</p>
                         </div>
                         <label class="text-slate-500 font-bold uppercase tracking-widest text-xs mb-3 block text-center">Nombre de personnes dans le foyer</label>
@@ -524,5 +524,3 @@
     </script>
 </body>
 </html>
-
-
