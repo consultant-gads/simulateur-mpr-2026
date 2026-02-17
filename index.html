@@ -107,7 +107,7 @@
                                 <div class="w-12 h-12 md:w-16 md:h-16 bg-green-50 rounded-2xl flex items-center justify-center text-green-600 text-xl md:text-3xl flex-shrink-0"><i class="fa-solid fa-clipboard-check"></i></div>
                                 <span class="text-sm md:text-xl font-bold">Réaliser une étude thermique</span>
                             </button>
-                            </div>
+                        </div>
                     </div>
 
                     <div class="step flex-col" id="step_etude_type">
@@ -282,7 +282,7 @@
                             MaPrimeRénov' catégorise les aides en fonction de vos revenus. Ces informations restent strictement confidentielles et ne seront jamais partagées.
                         </div>
                         <div id="income-buttons-container" class="grid grid-cols-1 gap-3 md:gap-4 max-w-md mx-auto w-full">
-                            </div>
+                        </div>
                     </div>
 
                     <div class="step flex-col" id="step10">
@@ -460,6 +460,7 @@
         function goTo(id) { history.push(currentId); show(id); }
         function show(id) { document.querySelectorAll('.step').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); currentId = id; updateUI(); }
 
+        // --- FONCTION MODIFIÉE : AJOUT DE L'EFFET DE CHARGEMENT SUR LE BOUTON ---
         function validateAndSubmit() {
             const nom = document.getElementById('nomInput').value.trim();
             const prenom = document.getElementById('prenomInput').value.trim();
@@ -467,6 +468,7 @@
             const tel = document.getElementById('telInput').value.trim();
             const rgpd = document.getElementById('rgpdCheck').checked;
             const telError = document.getElementById('telError');
+            const btn = document.getElementById('finalCta'); // On récupère le bouton
             
             if(!nom || !prenom || !email || !tel) { alert("Merci de remplir tous les champs."); return; }
             if(!rgpd) { alert("Veuillez accepter d'être recontacté(e)."); return; }
@@ -483,14 +485,28 @@
 
             telError.classList.add('hidden');
             document.getElementById('telInput').classList.remove('border-red-500');
+
+            // --- EFFET VISUEL PENDANT LA LATENCE ---
+            btn.disabled = true; // On empêche le double clic
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Calcul en cours...';
+            btn.classList.add('opacity-75', 'cursor-not-allowed');
             
             data.nom = nom; data.prenom = prenom; data.email = email; data.telephone = tel; data.currentMode = currentMode;
             
-            fetch(APPS_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) }).then(() => {
+            fetch(APPS_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) })
+            .then(() => {
                 // Tracking Google Ads
                 gtag('event', 'conversion', { 'send_to': 'AW-16833840094/hHKKCN3qo_cbEN6HgNs-' });
                 document.getElementById('finalName').innerText = prenom;
                 goTo('step11');
+            })
+            .catch(err => {
+                // En cas d'erreur technique (rare), on réactive le bouton pour qu'il puisse rééssayer
+                console.error(err);
+                btn.disabled = false;
+                btn.innerHTML = 'Connaître le montant de mes aides <i class="fa-solid fa-arrow-right ml-2"></i>';
+                btn.classList.remove('opacity-75', 'cursor-not-allowed');
+                alert("Une erreur est survenue, merci de réessayer.");
             });
         }
 
