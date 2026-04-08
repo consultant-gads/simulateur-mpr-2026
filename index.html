@@ -18,17 +18,13 @@
     </script>
 
     <style>
-        /* Force Montserrat partout */
+        /* Force Montserrat partout + Orange personnalisé */
         body, h1, h2, h3, h4, p, div, span, button, input, label { 
             font-family: 'Montserrat', sans-serif !important; 
         }
         
-        /* Fond 100% transparent */
-        body { 
-            background-color: transparent !important; 
-            margin: 0;
-            padding: 0;
-        }
+        /* Fond 100% transparent pour laisser voir ton site */
+        body { background-color: transparent !important; }
         
         /* Couleurs */
         .text-custom-orange { color: #ef7e00; }
@@ -36,11 +32,6 @@
         .hover-bg-custom-orange:hover { background-color: #d97200; }
         .accent-custom-orange { accent-color: #ef7e00; }
         .border-custom-orange { border-color: #ef7e00; }
-
-        /* Ombre propre */
-        .ombre-nette {
-            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
-        }
 
         .step { display: none; }
         .step.active { display: flex; animation: fadeIn 0.5s ease-out; }
@@ -53,6 +44,7 @@
             background-color: white;
             position: relative;
         }
+        /* Hover uniquement sur desktop pour éviter les sticky hover sur mobile */
         @media (hover: hover) {
             .card-choice:hover { border-color: #3b82f6; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(59, 130, 246, 0.08); }
         }
@@ -73,7 +65,7 @@
         
         .dpe-tag { width: 100%; height: 40px; border-radius: 8px; font-weight: 900; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
 
-        /* Masquer la scrollbar globale du body */
+        /* HACK ANTI-SCROLLBAR */
         html, body {
             scrollbar-width: none; 
             -ms-overflow-style: none; 
@@ -84,9 +76,11 @@
         }
     </style>
 </head>
-<body>
-    <div class="p-4 pb-16 md:p-8 md:pb-24 max-w-6xl mx-auto">
-        <div class="w-full bg-white rounded-2xl md:rounded-[2.5rem] ombre-nette overflow-hidden flex flex-col md:flex-row">
+<body class="bg-transparent m-0 p-0">
+
+    <div class="w-full flex items-start justify-center p-4 md:p-8">
+
+        <div class="w-full max-w-6xl bg-white rounded-2xl md:rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col md:flex-row min-h-[600px] md:min-h-[800px]">
             
             <div class="w-full md:w-72 bg-slate-50 p-10 border-r border-slate-100 hidden md:block text-sm">
                 <h3 class="text-slate-900 font-bold mb-10 text-xl">Votre parcours</h3>
@@ -354,6 +348,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 
     <script>
