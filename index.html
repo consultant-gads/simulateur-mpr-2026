@@ -43,6 +43,11 @@
         .accent-custom-orange { accent-color: #ef7e00; }
         .border-custom-orange { border-color: #ef7e00; }
 
+        /* L'OMBRE ULTRA FLUIDE SUR MESURE */
+        .ombre-fluide {
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+        }
+
         .step { display: none; }
         .step.active { display: flex; animation: fadeIn 0.5s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -76,9 +81,9 @@
     </style>
 </head>
 
-<body class="p-6">
+<body class="p-8 md:p-12">
 
-    <div class="w-full max-w-6xl mx-auto bg-white rounded-2xl md:rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col md:flex-row">
+    <div class="w-full max-w-6xl mx-auto bg-white rounded-2xl md:rounded-[2.5rem] ombre-fluide overflow-hidden flex flex-col md:flex-row">
         
         <div class="w-full md:w-72 bg-slate-50 p-10 border-r border-slate-100 hidden md:block text-sm">
             <h3 class="text-slate-900 font-bold mb-10 text-xl">Votre parcours</h3>
